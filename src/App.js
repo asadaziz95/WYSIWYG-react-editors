@@ -1,44 +1,46 @@
-import React, { Component } from 'react';
-// import {Editor, EditorState} from 'draft-js';
-// import '../node_modules/draft-js/dist/Draft.css';
-import { Editor } from 'react-draft-wysiwyg';
-import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-//import logo from './logo.svg';
-// import {Editor, EditorState} from 'draft-js';
-// import 'draft-js/dist/Draft.css';
-// import { Editor } from 'react-draft-wysiwyg';
-// import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
- import './App.css';
+import React, { useState } from "react";
+import { EditorState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { convertToHTML } from "draft-convert";
+import DOMPurify from "dompurify";
 
-// function MyEditor() {
-//   const [editorState, setEditorState] = React.useState(
-//     () => EditorState.createEmpty(),
-//   );
-
-//   return <Editor editorState={editorState} onChange={setEditorState} />;
-// }
-
-
-
-
-const EditorComponent = () => <Editor />
-const  App=()=> {
-  // const [editorState, setEditorState] = React.useState(
-  //   () => EditorState.createEmpty(),
-  // );
-
-  // return <Editor editorState={editorState} onChange={setEditorState} />;
-  // const [editorState, setEditorState] = React.useState(
-  //   () => EditorState.createEmpty(),
-  // );
-
-  // return <Editor editorState={editorState} onChange={setEditorState} />;
-  // return (
-  //   <div className="App">
-  //     <MyEditor />
-  //   </div>
-  // );
-  return <EditorComponent />
-}
+import "./App.css";
+const App = () => {
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
+  const [convertedContent, setConvertedContent] = useState();
+  const handleEditorChange = (state) => {
+    setEditorState(state);
+    convertContentToHTML();
+  };
+  const convertContentToHTML = () => {
+    let currentContentAsHTML = convertToHTML(editorState.getCurrentContent());
+    console.log(currentContentAsHTML);
+    setConvertedContent(currentContentAsHTML);
+  };
+  const createMarkup = (html) => {
+    return {
+      __html: DOMPurify.sanitize(html),
+    };
+  };
+  return (
+    <div className="App">
+      <header className="App-header">Rich Text Editor Example</header>
+      <Editor
+        editorState={editorState}
+        onEditorStateChange={handleEditorChange}
+        wrapperClassName="wrapper-class"
+        editorClassName="editor-class"
+        toolbarClassName="toolbar-class"
+      />
+      <div
+        className="preview"
+        dangerouslySetInnerHTML={createMarkup(convertedContent)}
+      ></div>
+    </div>
+  );
+};
 
 export default App;
