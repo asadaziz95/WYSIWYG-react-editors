@@ -28,3 +28,6 @@
   padding: 1rem;
   margin-top: 1rem;
 }
+canvas {
+  height: 100 !important;
+}

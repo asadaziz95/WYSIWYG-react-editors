@@ -6,7 +6,8 @@ import { convertToHTML } from "draft-convert";
 import DOMPurify from "dompurify";
 import Avatar from "react-avatar-edit";
 import { Form, Button } from "react-bootstrap";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Bar, Doughnut, Pie } from "react-chartjs-2";
+import moment from "moment";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -32,6 +33,9 @@ const App = () => {
   const [src, setSrc] = useState(imagePath);
   const [errorState, setErrorState] = useState();
   const [isEmailValid, setIsEmailValid] = useState();
+  const dateString = moment.unix(1613731440).utc().hour();
+  // .format("YYYY-MM-DD[T00:00:00.000]");
+  console.log(dateString);
   const onClose = () => {
     setPreview(null);
   };
@@ -172,13 +176,12 @@ const App = () => {
     <div className="App">
       <Bar
         data={data}
-        width={50}
-        height={150}
-        options={{ maintainAspectRatio: false }}
+
+        // options={{ maintainAspectRatio: false }}
       />
       {/* <Doughnut data={dataDonut} options={options} /> */}
       <div style={styles.relative}>
-        <Doughnut data={dataDonut} options={options} />
+        <Pie data={dataDonut} options={options} />
         {/* <div style={styles.pieContainer}>
           <Pie
             data={data}
